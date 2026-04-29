@@ -6,7 +6,7 @@ import React from "react";
 
 export const metadata: Metadata = {
     title: "reversi-next-js-app",
-    description: "reversi-next-js-app のNext.jsアプリケーション",
+    description: "reversi-next-js-app のリバーシアプリケーション",
 };
 
 export default function RootLayout({
