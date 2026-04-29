@@ -7,15 +7,8 @@
 
 ## [Unreleased]
 
-### 変更
+## [0.1.0] - 2026-04-29
 
-- ここに書く
+### Changed
 
-## [0.3.1] - 2026-03-04
-
-### 削除
-
-- `public/` 内の未参照 SVG ファイル（file.svg, globe.svg, next.svg, vercel.svg, window.svg）を削除
-- `tailwind.config.ts` を削除（Tailwind CSS v4 の CSS ファースト設定に伴い不要）
-- `src/app/globals.css` の `@theme inline` ブロックを削除（未使用の Tailwind カラー・フォントトークン定義）
-- `src/app/globals.css` の `:root` / `.dark` CSS 変数ブロックを削除し、`body` スタイルを直接カラーコードに変更
+- テンプレートから `reversi-next-js-app` 向けの初期設定を実施
