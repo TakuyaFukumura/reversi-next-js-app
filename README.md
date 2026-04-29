@@ -117,6 +117,9 @@ pnpm start
 │   └── reversi.ts           # リバーシのゲームロジック
 ├── src/
 │   └── app/
+│       ├── api/
+│       │   └── message/
+│       │       └── route.ts         # テンプレート由来のAPIサンプル
 │       ├── components/      # Reactコンポーネント
 │       │   ├── DarkModeProvider.tsx  # ダークモードProvider
 │       │   └── Header.tsx   # ヘッダーコンポーネント

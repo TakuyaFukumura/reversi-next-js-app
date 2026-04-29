@@ -26,13 +26,7 @@ const initialState: GameState = {
     message: 'あなたが先手です。黒の石を置いてください。',
 };
 
-function getPassMessage(board: Board): string {
-    const whiteMoves = getValidMoves(board, 'white');
-
-    if (whiteMoves.length === 0) {
-        return getWinnerMessage(board);
-    }
-
+function getPassMessage(): string {
     return 'あなたはパスしました。NPCが考えています...';
 }
 
@@ -143,7 +137,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         }
 
         case 'PASS': {
-            if (state.phase !== 'playing' || state.currentPlayer !== 'black' || getValidMoves(state.board, 'black').length > 0) {
+            const blackMoves = getValidMoves(state.board, 'black');
+
+            if (state.phase !== 'playing' || state.currentPlayer !== 'black' || blackMoves.length > 0) {
                 return state;
             }
 
@@ -161,7 +157,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
                 ...state,
                 currentPlayer: 'white',
                 phase: 'npcThinking',
-                message: getPassMessage(state.board),
+                message: getPassMessage(),
             };
         }
 
