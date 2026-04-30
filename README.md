@@ -1,26 +1,30 @@
 # reversi-next-js-app
 
-Next.jsを使ったシンプルな「Hello, world.」アプリケーションです。
-このプロジェクトは、SQLiteデータベースからメッセージを取得して表示する基本的な機能を提供します。
+Next.js を使って実装した 1 人用リバーシアプリケーションです。
+プレイヤーは黒石、NPC は白石を担当し、フロントエンドだけで対局が完結します。
 
 ## 技術スタック
 
-- **Next.js 16.1.6** - React フレームワーク（App Routerを使用）
+- **Next.js 16.2.4** - React フレームワーク（App Router を使用）
 - **React 19.2.4** - ユーザーインターフェース構築
 - **TypeScript** - 型安全性
 - **Tailwind CSS 4** - スタイリング
-- **SQLite** - データベース（better-sqlite3）
+- **Jest + React Testing Library** - ユニットテスト / UI テスト
 - **ESLint** - コード品質管理
 
 ## 機能
 
-- SQLiteデータベースから「Hello, world.」メッセージを取得
+- 8x8 固定盤面のリバーシをプレイ可能
+- 合法手のみクリック可能で、候補位置を視覚的に表示
+- NPC は 1 手先読みの簡易ミニマックスで着手
+- 人間は合法手がない場合のみ手動パス可能
+- NPC は合法手がない場合に自動パス
+- 対局の終了 / リセット操作に対応
 - レスポンシブデザイン対応
 - ダークモード対応（手動切替機能付き）
     - ライトモードとダークモードの2つのモードを手動で切り替え可能
     - ユーザーの選択はローカルストレージに保存され、ページ再読み込み時も維持されます
-- TypeScriptによる型安全性
-- モダンなUI/UXデザイン
+- TypeScript による型安全性
 
 ## 始め方
 
@@ -109,55 +113,36 @@ pnpm start
 
 ```
 ├── lib/
-│   └── database.ts          # SQLiteデータベース接続・操作
+│   ├── database.ts          # テンプレート由来のSQLiteサンプル
+│   └── reversi.ts           # リバーシのゲームロジック
 ├── src/
 │   └── app/
 │       ├── api/
 │       │   └── message/
-│       │       └── route.ts # APIエンドポイント
+│       │       └── route.ts         # テンプレート由来のAPIサンプル
 │       ├── components/      # Reactコンポーネント
 │       │   ├── DarkModeProvider.tsx  # ダークモードProvider
 │       │   └── Header.tsx   # ヘッダーコンポーネント
 │       ├── globals.css      # グローバルスタイル
 │       ├── layout.tsx       # アプリケーションレイアウト
-│       └── page.tsx         # メインページコンポーネント
-├── data/                    # SQLiteデータベースファイル（自動生成）
+│       └── page.tsx         # リバーシ画面
+├── __tests__/
+│   ├── lib/reversi.test.ts  # リバーシロジックのテスト
+│   └── src/app/page.test.tsx # リバーシ画面のテスト
 ├── package.json
 ├── next.config.ts
-├── tailwind.config.ts
 └── tsconfig.json
 ```
 
-## API エンドポイント
+## ゲーム仕様
 
-### GET /api/message
-
-データベースから最新のメッセージを取得します。
-
-**レスポンス:**
-
-```json
-{
-  "message": "Hello, world."
-}
-```
-
-## データベース
-
-SQLiteデータベースは初回起動時に自動的に作成されます：
-
-- データベースファイル: `data/app.db`
-- テーブル: `messages`
-    - `id`: 自動増分プライマリーキー
-    - `content`: メッセージ内容
-    - `created_at`: 作成日時
+- 先手は人間（黒）、後手は NPC（白）
+- 石数は盤面から都度集計
+- 双方とも合法手がなくなった時点で終局
+- 手動終了時は勝敗判定を行わず、「終了済み」を表示
+- 状態はメモリ上のみで保持し、リロードで初期状態に戻る
 
 ## カスタマイズ
-
-### メッセージの変更
-
-データベース内のメッセージを変更したい場合は、
-SQLiteクライアントを使用して `data/app.db` ファイル内の `messages` テーブルを編集してください。
 
 ### スタイルの変更
 
@@ -203,13 +188,15 @@ npm run test:coverage
 #### テストファイルの構成
 
 - `__tests__/lib/database.test.ts`: データベース機能のテスト
+- `__tests__/lib/reversi.test.ts`: リバーシロジックのテスト
 - `__tests__/src/app/components/DarkModeProvider.test.tsx`: ダークモードProvider のテスト
 - `__tests__/src/app/components/Header.test.tsx`: ヘッダーコンポーネントのテスト
+- `__tests__/src/app/page.test.tsx`: リバーシ画面のテスト
 
 #### テストの特徴
 
-- **データベーステスト**: SQLiteを使用した実際のデータベース操作のテスト
-- **Reactコンポーネントテスト**: React Testing Library を使用したコンポーネントのレンダリングとインタラクションのテスト
+- **ゲームロジックテスト**: 合法手、反転、NPC の着手選択を検証
+- **Reactコンポーネントテスト**: React Testing Library を使用した画面表示とインタラクションのテスト
 - **モッキング**: localStorage や外部依存関係のモック
 - **カバレッジ**: コードカバレッジの測定と報告
 
