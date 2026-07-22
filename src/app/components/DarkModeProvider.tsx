@@ -13,34 +13,26 @@ interface DarkModeContextType {
 const DarkModeContext = createContext<DarkModeContextType | undefined>(undefined);
 
 export function DarkModeProvider({children}: { readonly children: ReactNode }) {
-    const [theme, setTheme] = useState<Theme>('light');
-    const [isDark, setIsDark] = useState(false);
-
-    useEffect(() => {
+    const [theme, setTheme] = useState<Theme>(() => {
         // ブラウザ環境のみlocalStorageにアクセス
-        if (globalThis.window !== undefined) {
+        if (typeof window !== 'undefined') {
             const savedTheme = localStorage.getItem('theme') as Theme;
             if (savedTheme && ['light', 'dark'].includes(savedTheme)) {
-                setTheme(savedTheme);
+                return savedTheme;
             }
         }
-    }, []);
+        return 'light';
+    });
+    const isDark = theme === 'dark';
 
     useEffect(() => {
-        const updateTheme = () => {
-            const isDarkMode = theme === 'dark';
-            setIsDark(isDarkMode);
-
-            // HTMLタグにdarkクラスを追加/削除
-            if (isDarkMode) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        };
-
-        updateTheme();
-    }, [theme]);
+        // HTMLタグにdarkクラスを追加/削除
+        if (isDark) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }, [isDark]);
 
     const handleSetTheme = (newTheme: Theme) => {
         setTheme(newTheme);
