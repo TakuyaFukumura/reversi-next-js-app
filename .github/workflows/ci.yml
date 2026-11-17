@@ -16,7 +16,7 @@ jobs:
     # Node.jsのバージョン戦略（複数バージョンでテスト）
     strategy:
       matrix:
-        node-version: [ 20.x ]
+        node-version: [ 22.x ]
 
     steps:
       # 1. リポジトリのコードをチェックアウト
